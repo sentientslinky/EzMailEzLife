@@ -48,7 +48,9 @@ namespace EzMailEzLife
         {
             var byteArr = Attachment.CreateAttachmentFromString("", message.Payload.Parts[0].Body.Data);
             var converted = Convert.FromBase64String(byteArr.Name.Replace('-', '+').Replace('_', '/'));
-            messageDisplay.Text = System.Text.Encoding.UTF8.GetString(converted);
+            messageDisplay.Text = System.Text.Encoding.ASCII.GetString(converted);
+
+
         }
     }
 }

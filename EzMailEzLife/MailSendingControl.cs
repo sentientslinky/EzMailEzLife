@@ -15,6 +15,7 @@ namespace EzMailEzLife
         public MailSendingControl()
         {
             InitializeComponent();
+            Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -50,7 +51,16 @@ namespace EzMailEzLife
 
         private void sendButotn_Click(object sender, EventArgs e)
         {
-            ServiceManager.Instance.SendEmail(_targetEmailAddress, composeTextBox.Text, subjectTextBox.Text);
+            var msg = ServiceManager.Instance.SendEmail(_targetEmailAddress, composeTextBox.Text, subjectTextBox.Text);
+
+            Controls.Clear();
+            Label label = new Label();
+            label.Text = "Your email has been sent!";
+            label.Font = new Font(DefaultFont.FontFamily, 30, FontStyle.Bold);
+            label.Size = this.Size;
+            Controls.Add(label);
+
+
         }
 
         private string _targetEmailAddress;

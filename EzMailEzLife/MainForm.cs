@@ -25,7 +25,26 @@ namespace EzMailEzLife
         private void MainForm_Load(object sender, EventArgs e)
         {
             SetReadingLayout();
-            
+
+            CalculateUnreadMessages();
+        }
+
+        private void CalculateUnreadMessages()
+        {
+            BackgroundWorker unreadCountWorker = new BackgroundWorker();
+            unreadCountWorker.DoWork += unreadCountWorker_DoWork;
+            unreadCountWorker.RunWorkerCompleted += unreadCountWorker_RunWorkerCompleted;
+            unreadCountWorker.RunWorkerAsync();
+        }
+
+        void unreadCountWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ReadMessagesButton.Text = "Read Mail (" + _lastUnreadMessageCount + " Unread)";
+        }
+
+        void unreadCountWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _lastUnreadMessageCount = ServiceManager.Instance.GetUnreadEmails();
         }
 
         private void ReadMessagesButton_Click(object sender, EventArgs e)
@@ -44,5 +63,7 @@ namespace EzMailEzLife
             RightPanel.Controls.Clear();
             RightPanel.Controls.Add(new MailSendingControl());
         }
+
+        private int _lastUnreadMessageCount = 0;
     }
 }

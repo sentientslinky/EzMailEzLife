@@ -11,6 +11,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using System.IO;
 using System.Threading;
+using System.ComponentModel;
 
 namespace EzMailEzLife
 {
@@ -97,11 +98,13 @@ namespace EzMailEzLife
         public int GetUnreadEmails()
         {
             var emails = ServiceManager.Instance.GetEmailsFromSelectedSenders( UserManager.Instance.GetAllApprovedUsers(), true);
+            if (emails.Messages == null)
+                return 0;
 
             return emails.Messages.Count;
         }
 
-        public ListMessagesResponse GetEmailsFromSelectedSenders(List<ApprovedUser> sendersList = null, bool unreadOnly = true, int limit = 10, int dayLimit = 15)
+        public ListMessagesResponse GetEmailsFromSelectedSenders(List<ApprovedUser> sendersList = null, bool unreadOnly = true, int limit = 10, int dayLimit = 30)
         {
             UsersResource.MessagesResource.ListRequest request = GmailService.Users.Messages.List("me");
             request.MaxResults = 10;
@@ -112,18 +115,27 @@ namespace EzMailEzLife
 
             request.Fields = "messages";
             //request.LabelIds = labelList.ToArray();
-            request.Q = "";
+            request.Q = "(";
             if (sendersList != null)
             {
                 foreach (var email in sendersList)
                 {
-                    if (request.Q != "")
+                    if (request.Q != "(")
                     {
                         request.Q += " OR ";
                     }
                     request.Q += "from: " + email.UserEmail;
                 }
             }
+
+            request.Q += ") ";
+            if(dayLimit != -1)
+            {
+                request.Q += "after:"+( DateTime.Now.Subtract(TimeSpan.FromDays(dayLimit))).ToString("yyyy/MM/dd");
+            }
+
+            if(unreadOnly)
+                request.Q += " label:" + UnreadLabel;
 
             request.Q += " label:" + NormalInboxLabel;
             return request.Execute();
@@ -160,6 +172,19 @@ namespace EzMailEzLife
             UsersResource.MessagesResource.SendRequest request = GmailService.Users.Messages.Send(m, "me");
             
             return request.Execute();
+        }
+
+        public void SetMessageAsRead(Message message)
+        {
+            BackgroundWorker bgworker = new BackgroundWorker();
+            bgworker.DoWork += (s, e) =>
+            {
+                ModifyMessageRequest mods = new ModifyMessageRequest();
+                mods.RemoveLabelIds = new List<string>() { UnreadLabel };
+                var modifyReq = GmailService.Users.Messages.Modify(mods, "me", message.Id);
+                modifyReq.Execute();
+            };
+            bgworker.RunWorkerAsync();
         }
 
         static byte[] GetBytes(string str)

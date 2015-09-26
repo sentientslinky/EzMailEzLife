@@ -66,6 +66,8 @@ namespace EzMailEzLife
         {
             base.OnClick(e);
             _mainControl.DisplayMessage(_messageId, _message);
+            setReadness(true);
+            ServiceManager.Instance.SetMessageAsRead(_message);
         }
 
         private void setReadness(bool isRead)

@@ -34,12 +34,12 @@
             // 
             // messageDisplay
             // 
-            this.messageDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.messageDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageDisplay.Location = new System.Drawing.Point(0, 227);
             this.messageDisplay.Name = "messageDisplay";
+            this.messageDisplay.ReadOnly = true;
             this.messageDisplay.Size = new System.Drawing.Size(877, 374);
             this.messageDisplay.TabIndex = 0;
             this.messageDisplay.Text = "Test text lol";
