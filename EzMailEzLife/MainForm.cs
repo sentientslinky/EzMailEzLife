@@ -65,5 +65,16 @@ namespace EzMailEzLife
         }
 
         private int _lastUnreadMessageCount = 0;
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("EzMailEzLife by Yorrick Mendes");
+        }
+
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new ConfigManager();
+            form.ShowDialog();
+        }
     }
 }

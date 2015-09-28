@@ -26,11 +26,18 @@ namespace EzMailEzLife
 
             var approvedUsers = UserManager.Instance.GetAllApprovedUsers();
             var emails = ServiceManager.Instance.GetEmailsFromSelectedSenders(UserManager.Instance.GetAllApprovedUsers(), false);
-
-            foreach(var email in emails.Messages)
+            if (emails.Messages != null)
             {
-                emailListFlowPanel.Controls.Add(new ReadMailSingleBlockControl(email, this));
+                foreach (var email in emails.Messages)
+                {
+                    emailListFlowPanel.Controls.Add(new ReadMailSingleBlockControl(email, this));
+                }
             }
+            else
+            {
+                MessageBox.Show("Couldn't get messages. Whops!");
+            }
+
             emailListFlowPanel.Resize += emailListFlowPanel_Resize;
         }
 
@@ -51,6 +58,12 @@ namespace EzMailEzLife
             messageDisplay.Text = System.Text.Encoding.ASCII.GetString(converted);
 
 
+        }
+
+        internal void DeselectAllMails()
+        {
+            foreach(var v in emailListFlowPanel.Controls)
+                ((ReadMailSingleBlockControl) v).BorderStyle = System.Windows.Forms.BorderStyle.None;
         }
     }
 }

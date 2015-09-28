@@ -45,5 +45,19 @@ namespace EzMailEzLife
         private static UserManager _userManager = null;
         private List<ApprovedUser> _approvedUsers;
 
+
+        internal void SetApprovedUsers(List<KeyValuePair<string, string>> kvpList)
+        {
+            _approvedUsers = new List<ApprovedUser>();
+            Properties.Settings.Default.ApprovedAdmins.Clear();
+            foreach(var newUsers in kvpList)
+            {
+                
+                Properties.Settings.Default.ApprovedAdmins.Add(newUsers.Key+","+newUsers.Value);
+                _approvedUsers.Add(new ApprovedUser(){ UserName= newUsers.Key, UserEmail= newUsers.Value});
+            }
+
+            Properties.Settings.Default.Save();
+        }
     }
 }

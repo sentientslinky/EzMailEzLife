@@ -42,7 +42,7 @@
             this.messageDisplay.ReadOnly = true;
             this.messageDisplay.Size = new System.Drawing.Size(877, 374);
             this.messageDisplay.TabIndex = 0;
-            this.messageDisplay.Text = "Test text lol";
+            this.messageDisplay.Text = "Click an email to read!";
             // 
             // emailListFlowPanel
             // 

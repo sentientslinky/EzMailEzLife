@@ -68,6 +68,8 @@ namespace EzMailEzLife
             _mainControl.DisplayMessage(_messageId, _message);
             setReadness(true);
             ServiceManager.Instance.SetMessageAsRead(_message);
+            ((MailReadingControl)Parent.Parent).DeselectAllMails();
+            BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
         }
 
         private void setReadness(bool isRead)

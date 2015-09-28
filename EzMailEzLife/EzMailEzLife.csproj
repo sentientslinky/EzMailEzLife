@@ -91,6 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApprovedUsers.cs" />
+    <Compile Include="ConfigManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigManager.Designer.cs">
+      <DependentUpon>ConfigManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="MailReadingControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -118,6 +124,9 @@
       <DependentUpon>ReadMailSingleBlockControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ServiceManager.cs" />
+    <EmbeddedResource Include="ConfigManager.resx">
+      <DependentUpon>ConfigManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MailReadingControl.resx">
       <DependentUpon>MailReadingControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -135,6 +144,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ReadMailSingleBlockControl.resx">
       <DependentUpon>ReadMailSingleBlockControl.cs</DependentUpon>
@@ -143,6 +153,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\EzMailEzLife.Properties.Resources.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
