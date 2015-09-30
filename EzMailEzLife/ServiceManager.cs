@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
@@ -22,7 +21,7 @@ namespace EzMailEzLife
 
         private static ServiceManager _instance;
 
-        public GmailService GmailService
+        public GmailService GmailSer
         {
             get;
             private set;
@@ -30,7 +29,7 @@ namespace EzMailEzLife
 
         private ServiceManager(GmailService gmailSer)
         {
-            GmailService = gmailSer;
+            GmailSer = gmailSer;
         }
         public static ServiceManager Instance
         {
@@ -69,10 +68,10 @@ namespace EzMailEzLife
 
         public ListMessagesResponse TestFunction()
         {
-            UsersResource.MessagesResource.ListRequest request = GmailService.Users.Messages.List("me");
+            UsersResource.MessagesResource.ListRequest request = GmailSer.Users.Messages.List("me");
             request.MaxResults = 10;
             request.LabelIds = new string[] { "UNREAD", "CATEGORY_UPDATES" };
-            ListLabelsResponse response = GmailService.Users.Labels.List("me").Execute();
+            ListLabelsResponse response = GmailSer.Users.Labels.List("me").Execute();
             
             foreach (Label label in response.Labels)
             {
@@ -83,7 +82,7 @@ namespace EzMailEzLife
 
         private ListMessagesResponse GetEmails(string[] labels, int limit)
         {
-            UsersResource.MessagesResource.ListRequest request = GmailService.Users.Messages.List("me");
+            UsersResource.MessagesResource.ListRequest request = GmailSer.Users.Messages.List("me");
             request.MaxResults = limit;
             request.LabelIds = labels; //= new string[] { "UNREAD", "CATEGORY_UPDATES" };
             return request.Execute();
@@ -91,7 +90,7 @@ namespace EzMailEzLife
 
         public Message GetEmailInformation(string messageId)
         {
-            UsersResource.MessagesResource.GetRequest request = GmailService.Users.Messages.Get("me", messageId);
+            UsersResource.MessagesResource.GetRequest request = GmailSer.Users.Messages.Get("me", messageId);
             return request.Execute();
         }
 
@@ -106,7 +105,7 @@ namespace EzMailEzLife
 
         public ListMessagesResponse GetEmailsFromSelectedSenders(List<ApprovedUser> sendersList = null, bool unreadOnly = true, int limit = 10, int dayLimit = 30)
         {
-            UsersResource.MessagesResource.ListRequest request = GmailService.Users.Messages.List("me");
+            UsersResource.MessagesResource.ListRequest request = GmailSer.Users.Messages.List("me");
             request.MaxResults = 10;
             List<string> labelList = new List<string>();
             labelList.Add(NormalInboxLabel);
@@ -143,7 +142,7 @@ namespace EzMailEzLife
 
         public ListThreadsResponse GetThreadsFromSelectedSenders(List<ApprovedUser> sendersList = null, bool unreadOnly = true, int limit = 10)
         {
-            UsersResource.ThreadsResource.ListRequest request = GmailService.Users.Threads.List("me");
+            UsersResource.ThreadsResource.ListRequest request = GmailSer.Users.Threads.List("me");
             request.MaxResults = 10;
             List<string> labelList = new List<string>();
             labelList.Add(NormalInboxLabel);
@@ -157,9 +156,9 @@ namespace EzMailEzLife
 
         public Message SendEmail(string targetEmailAddress, string emailContent, string subject)
         {
-            var draftsList = GmailService.Users.Drafts.List("me");
+            var draftsList = GmailSer.Users.Drafts.List("me");
             var respDrafts = draftsList.Execute();
-            var getDraft = GmailService.Users.Drafts.Get("me", respDrafts.Drafts.First().Id);
+            var getDraft = GmailSer.Users.Drafts.Get("me", respDrafts.Drafts.First().Id);
             var singleDraft = getDraft.Execute();
             Message m = new Message();
             string finalRaw = "To: " + targetEmailAddress+"\n";
@@ -168,8 +167,8 @@ namespace EzMailEzLife
             finalRaw += emailContent;
             var test = Convert.ToBase64String(Encoding.ASCII.GetBytes(finalRaw));//.Replace('+', '-').Replace('/', '_');
             m.Raw = test.Replace('+', '-').Replace('/', '_');
-            
-            UsersResource.MessagesResource.SendRequest request = GmailService.Users.Messages.Send(m, "me");
+
+            UsersResource.MessagesResource.SendRequest request = GmailSer.Users.Messages.Send(m, "me");
             
             return request.Execute();
         }
@@ -181,7 +180,7 @@ namespace EzMailEzLife
             {
                 ModifyMessageRequest mods = new ModifyMessageRequest();
                 mods.RemoveLabelIds = new List<string>() { UnreadLabel };
-                var modifyReq = GmailService.Users.Messages.Modify(mods, "me", message.Id);
+                var modifyReq = GmailSer.Users.Messages.Modify(mods, "me", message.Id);
                 modifyReq.Execute();
             };
             bgworker.RunWorkerAsync();
